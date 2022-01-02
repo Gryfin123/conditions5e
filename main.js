@@ -168,8 +168,8 @@ Token.prototype._updateHealthOverlay = function () {
   let priorHealth = this.data.overlayEffect;
   let newHealth = null;
   if (curHP <= 0) {
-    if (priorHealth === "modules/conditions5e/icons/dead.svg") newHealth = priorHealth;
-    else newHealth = "modules/conditions5e/icons/almostdead.svg";
+    if (priorHealth === "modules/conditions5e/icons/almostdead.svg") newHealth = priorHealth;
+    else newHealth = "modules/conditions5e/icons/dead.svg";
   } else if (curHP / maxHP < 0.5) newHealth = "modules/conditions5e/icons/wounded.svg";
   // toggleOverlay deprecated in 0.7.4
   if (newHealth !== priorHealth) {
