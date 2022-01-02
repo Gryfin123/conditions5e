@@ -11,21 +11,6 @@ Hooks.once("init", function () {
       icon: "modules/conditions5e/icons/dead.svg"
     },
     {
-      id: "unconscious",
-      label: "EFFECT.StatusUnconscious",
-      icon: "modules/conditions5e/icons/unconscious.svg"
-    },
-    {
-      id: "stun",
-      label: "EFFECT.StatusStunned",
-      icon: "modules/conditions5e/icons/stunned.svg"
-    },
-    {
-      id: "exhaustion1",
-      label: "EFFECT.StatusExhausted1",
-      icon: "modules/conditions5e/icons/exhaustion1.svg"
-    },
-    {
       id: "incapacitated",
       label: "EFFECT.StatusIncapacitated",
       icon: "modules/conditions5e/icons/incapacitated.svg"
@@ -41,11 +26,6 @@ Hooks.once("init", function () {
       icon: "modules/conditions5e/icons/petrified.svg",
     },
     {
-      id: "exhaustion2",
-      label: "EFFECT.StatusExhausted2",
-      icon: "modules/conditions5e/icons/exhaustion2.svg"
-    },
-    {
       id: "grappled",
       label: "EFFECT.StatusGrappled",
       icon: "modules/conditions5e/icons/grappled.svg",
@@ -54,16 +34,6 @@ Hooks.once("init", function () {
       id: "restrain",
       label: "EFFECT.StatusRestrained",
       icon: "modules/conditions5e/icons/restrained.svg",
-    },
-    {
-      id: "prone",
-      label: "EFFECT.StatusProne",
-      icon: "modules/conditions5e/icons/prone.svg"
-    },
-    {
-      id: "exhaustion3",
-      label: "EFFECT.StatusExhausted3",
-      icon: "modules/conditions5e/icons/exhaustion3.svg"
     },
     {
       id: "charmed",
@@ -81,11 +51,6 @@ Hooks.once("init", function () {
       icon: "modules/conditions5e/icons/poisoned.svg"
     },
     {
-      id: "exhaustion4",
-      label: "EFFECT.StatusExhausted4",
-      icon: "modules/conditions5e/icons/exhaustion4.svg"
-    },
-    {
       id: "blind",
       label: "EFFECT.StatusBlind",
       icon: "modules/conditions5e/icons/blinded.svg"
@@ -101,6 +66,26 @@ Hooks.once("init", function () {
       icon: "modules/conditions5e/icons/diseased.svg"
     },
     {
+      id: "exhaustion1",
+      label: "EFFECT.StatusExhausted1",
+      icon: "modules/conditions5e/icons/exhaustion1.svg"
+    },
+    {
+      id: "exhaustion2",
+      label: "EFFECT.StatusExhausted2",
+      icon: "modules/conditions5e/icons/exhaustion2.svg"
+    },
+    {
+      id: "exhaustion3",
+      label: "EFFECT.StatusExhausted3",
+      icon: "modules/conditions5e/icons/exhaustion3.svg"
+    },
+    {
+      id: "exhaustion4",
+      label: "EFFECT.StatusExhausted4",
+      icon: "modules/conditions5e/icons/exhaustion4.svg"
+    },
+    {
       id: "exhaustion5",
       label: "EFFECT.StatusExhausted5",
       icon: "modules/conditions5e/icons/exhaustion5.svg"
@@ -110,7 +95,22 @@ Hooks.once("init", function () {
   // Add created effects to the list instead of replacing
   for (i = 0; i < addedEffects.length; i++)
   {
-    CONFIG.statusEffects.push(addedEffects[i]);
+    // Remove already existin status effect with the same id
+    const currentElementId = addedEffects[i].id;
+    const presentIndex = CONFIG.statusEffects.findIndex(
+      (status) => status.id === currentElementId
+    )
+
+    if (presentIndex !== -1)
+    {
+      // Replace icon
+      CONFIG.statusEffects[presentIndex] = addedEffects[i];
+    }
+    else
+    {
+      // Add new status
+      CONFIG.statusEffects.push(addedEffects[i]);
+    }
   }
   console.log(CONFIG.statusEffects);
 
