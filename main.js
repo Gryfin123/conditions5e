@@ -4,7 +4,7 @@
  */
 Hooks.once("init", function () {
   console.log(CONFIG.statusEffects);
-  CONFIG.statusEffects = [
+  addedEffects = [
     {
       id: "dead",
       label: "EFFECT.StatusDead",
@@ -106,6 +106,13 @@ Hooks.once("init", function () {
       icon: "modules/conditions5e/icons/exhaustion5.svg"
     },
   ];
+
+  // Add created effects to the list instead of replacing
+  for (i = 0; i < addedEffects.length; i++)
+  {
+    CONFIG.statusEffects.push(addedEffects[i]);
+  }
+  console.log(CONFIG.statusEffects);
 
   // Replace selected control icons
   CONFIG.controlIcons.visibility = "modules/conditions5e/icons/invisible.svg";
