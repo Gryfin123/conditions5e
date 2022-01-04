@@ -133,40 +133,83 @@ let icon_wounded =      {id: "wounded", label: "EFFECT.StatusWounded", icon: "mo
 
 // Function to use token overlay to show status as wounded, unconscious, or dead
 Token.prototype._updateHealthOverlay = function () {
-    console.log(this);
+    console.log("Conditions5e | Token update initiated");
     let newOverlay = determineNewOverlay(this);
   
     // If any Overlay status applies to this token now.
-    clearOverlayEffects(this)
-    if (newOverlay !== null)
+    if (newOverlay)
     {
-        turnOnOverlayEffect(this, newOverlay);
+        selectOverlayEffect(this, newOverlay);
     }
+    else
+    {
+        clearOverlayEffects(this);
+    }
+    console.log("Conditions5e | Token update finalized");
 };
 
 /// --- SUPPORT FUNCTIONS ---
+// Choses which effect to apply/remove from wounded, dead or unconcious. 
+function selectOverlayEffect(token, newOverlay){
+    console.log("Conditions5e | Selecting current overlay");
+    let currentOverlay = fetchCurrentOverlay(token);
+    let tokenIsSetRight = false;
 
+    if (currentOverlay)
+    {
+        if (currentOverlay.icon !== newOverlay.icon)
+        {
+            turnOffOverlayEffect(token, currentOverlay);
+        }
+        else
+        {
+            tokenIsSetRight = true;
+        }
+    }
+
+    if (!tokenIsSetRight)
+    {
+        turnOnOverlayEffect(token, newOverlay);
+    }
+}
 // Clears overlayas effects of wounded, dead or unconcious. 
 function clearOverlayEffects(token){
+    console.log("Conditions5e | Clearing current overlay");
     turnOffOverlayEffect(token, icon_dead)
     turnOffOverlayEffect(token, icon_unconscious)
     turnOffOverlayEffect(token, icon_wounded)
 }
-// Gets current overlay effect(s?) of a token
+// Gets current overlay effect of a token
 function fetchCurrentOverlay(token){
+    console.log("Conditions5e | Fetching current overlay");
     const existing = token.actor.effects.find(e => e.getFlag("core", "overlay") === true);
-    console.log("Existing:")
-    console.log(existing);
+
+    if (existing)
+    {
+        switch(existing.getFlag("core", "statusId"))
+        {
+            case icon_dead.id:
+                return icon_dead;
+            break;
+            case icon_unconscious.id:
+                return icon_unconscious;
+            break;
+            case icon_wounded.id:
+                return icon_wounded;
+            break;
+        }
+    }
     return existing;
 }
 // Determine if any new overlay applies to the token.
 function determineNewOverlay(token){
+    console.log("Conditions5e | Determining new overlay");
     let maxHP = token.actor.data.data.attributes.hp.max;
     let curHP = token.actor.data.data.attributes.hp.value;
     let currentOverlay = fetchCurrentOverlay(token);
 
     if (curHP <= 0) {
-        if (currentOverlay.icon === icon_unconscious.icon) 
+        if (currentOverlay && currentOverlay.icon === icon_unconscious.icon) 
         {
             return icon_unconscious;
         }
@@ -186,22 +229,28 @@ function determineNewOverlay(token){
 }
 // Make sure that certain effect stays on the token.
 function turnOnOverlayEffect(token, effect) {
+    console.log("Conditions5e | Turning on an effect " + effect.id);
     const existing = token.actor.effects.find(e => e.getFlag("core", "statusId") === effect.id);
 
     // Effect is present on the token and is an overlay.
     if (!existing)
     {
+        console.log("Conditions5e | " + effect.id + " found and turned on");
         // Remove status effect
         token.toggleEffect(effect, { overlay: true });
     }
 }
 // Make sure that certain effect is removed.
 function turnOffOverlayEffect(token, effect){
+    console.log("Conditions5e | Turning off an effect " + effect.id);
+    console.log(effect);
     const existing = token.actor.effects.find(e => e.getFlag("core", "statusId") === effect.id);
 
+    console.log(existing);
     // Effect is present on the token and is an overlay.
     if (existing)
     {
+        console.log("Conditions5e | " + effect.id + " found and turned off");
         // Remove status effect
         token.toggleEffect(effect, { overlay: true });
     }
